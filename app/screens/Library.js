@@ -3,9 +3,19 @@ import React, { Component } from 'react'
 import { AudioContext } from '../contextAPI/AudioProvider'
 import { RecyclerListView, LayoutProvider } from 'recyclerlistview';
 import LibraryItem from '../components/LibraryItem';
+import OptionModal from '../components/OptionModal';
 
 export default class AudioList extends Component {
   static contextType = AudioContext;
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      optionModalVisible: false,
+    }
+
+    this.currentItem = {}
+  }
 
   layoutProvider = new LayoutProvider((index) => 'audio', (type, dim) => {
     dim.width = Dimensions.get('window').width;
@@ -14,7 +24,8 @@ export default class AudioList extends Component {
 
   rowRenderer = (type, item) => {
     return <View style={styles.container}><LibraryItem title={item.filename} duration={item.duration} onOptionPress={() => {
-      console.log('opening options')
+      this.currentItem = item;
+      this.setState({...this.state, optionModalVisible: true})
     }}/></View>
   }
 
@@ -35,8 +46,18 @@ export default class AudioList extends Component {
       // </ScrollView>
       <AudioContext.Consumer>
         {({ dataProvider, }) => {
-          return <RecyclerListView dataProvider={dataProvider} layoutProvider={this.layoutProvider} rowRenderer={this.rowRenderer} />
-        }}
+          return (
+          <>
+            <RecyclerListView dataProvider={dataProvider} layoutProvider={this.layoutProvider} rowRenderer={this.rowRenderer} />
+            <OptionModal
+              onPlayPress={() => console.log('Playing music')}
+              onPlaylistPress={() => console.log('Adding to playlist')}
+              currentItem={this.currentItem}
+              onClose={() => this.setState({...this.state, optionModalVisible: false})}
+              visible={this.state.optionModalVisible}
+            />
+          </>
+        )}}
       </AudioContext.Consumer>
     );
   }

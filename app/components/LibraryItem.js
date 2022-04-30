@@ -24,12 +24,16 @@ export default function LibraryItem({title, duration, onOptionPress}) {
         </View>
       </View>
       <View style={styles.rightContainer}>
-        <SimpleLineIcons onPress={onOptionPress} name="options-vertical" size={20} color="black" />
+        <SimpleLineIcons
+          onPress={onOptionPress}
+          name="options-vertical"
+          size={20}
+          color="orange"
+          style={{padding: 10}}
+        />
       </View>
     </View>
-    <View style={styles.separator}>
-
-    </View>
+    {/* <View style={styles.separator} /> */}
     </>
   )
 }
@@ -58,7 +62,7 @@ const styles = StyleSheet.create({
   thumbnail: {
     height: 50,
     flexBasis: 50,
-    backgroundColor: '#898a8b',
+    backgroundColor: 'orange',
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 25,
@@ -76,16 +80,16 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#898a8b'
   },
-  separator: {
-    width: width - 80,
-    backgroundColor: '#333',
-    opacity: 0.3,
-    height: 0.5,
-    alignSelf: 'center',
-    marginTop: 10,
-  },
   timeText: {
     fontSize: 14,
     color: '#898a8b'
-  }
+  },
+  // separator: {
+  //   width: width - 80,
+  //   backgroundColor: 'orange',
+  //   opacity: 0.3,
+  //   height: 0.5,
+  //   alignSelf: 'center',
+  //   marginTop: 10,
+  // },
 })
