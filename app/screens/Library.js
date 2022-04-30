@@ -2,6 +2,7 @@ import { Text, StyleSheet, ScrollView, View, Dimensions } from 'react-native'
 import React, { Component } from 'react'
 import { AudioContext } from '../contextAPI/AudioProvider'
 import { RecyclerListView, LayoutProvider } from 'recyclerlistview';
+import LibraryItem from '../components/LibraryItem';
 
 export default class AudioList extends Component {
   static contextType = AudioContext;
@@ -12,7 +13,9 @@ export default class AudioList extends Component {
   });
 
   rowRenderer = (type, item) => {
-    return <View style={styles.container}><Text style={styles.item}>{item.filename}</Text></View>
+    return <View style={styles.container}><LibraryItem title={item.filename} duration={item.duration} onOptionPress={() => {
+      console.log('opening options')
+    }}/></View>
   }
 
   render() {
@@ -46,16 +49,4 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  item: {
-    backgroundColor: '#2f3032',
-    alignSelf: 'stretch',
-    color: '#898a8b',
-    marginTop: 10,
-    padding: 10,
-    fontSize: 18,
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: '#898a8b',
-    shadowColor: '#cbe91e',
-  }
 })
