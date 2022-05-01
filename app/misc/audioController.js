@@ -30,4 +30,13 @@ export const resume = async (playbackObj) => {
   }
 }
 
-//select another audio
+//select another audio (need uri for next audio source)
+export const playNext = async (playbackObj, uri) => {
+  try {
+    await playbackObj.stopAsync(); // this will stop prev song even if currently playing (not paused)
+    await playbackObj.unloadAsync(); // this will unload it from state
+    return await play(playbackObj, uri)
+  } catch (error) {
+    console.error('error inside playNext helper method', error.message)
+  }
+}
