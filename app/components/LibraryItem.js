@@ -1,7 +1,6 @@
-import { View, StyleSheet, Text } from 'react-native'
+import { View, StyleSheet, Text, TouchableWithoutFeedback, Dimensions } from 'react-native'
 import React from 'react'
 import { SimpleLineIcons } from '@expo/vector-icons';
-import { Dimensions } from 'react-native-web';
 
 const convertTime = (duration) => {
   let ms = duration * 1000; // specific to my case
@@ -10,19 +9,21 @@ const convertTime = (duration) => {
   return min + ':' + (sec < 10 ? '0' : '') + sec;
 }
 
-export default function LibraryItem({title, duration, onOptionPress}) {
+export default function LibraryItem({title, duration, onOptionPress, onAudioPress}) {
   return (
     <>
     <View style={styles.container}>
-      <View style={styles.leftContainer}>
-        <View style={styles.thumbnail}>
-          <Text style={styles.thumbnailText}>{title[0]}</Text>
+      <TouchableWithoutFeedback onPress={onAudioPress}>
+        <View style={styles.leftContainer}>
+          <View style={styles.thumbnail}>
+            <Text style={styles.thumbnailText}>{title[0]}</Text>
+          </View>
+          <View style={styles.titleContainer}>
+            <Text numberOfLines={1} style={styles.title}>{title}</Text>
+            <Text style={styles.timeText}>{convertTime(duration)}</Text>
+          </View>
         </View>
-        <View style={styles.titleContainer}>
-          <Text numberOfLines={1} style={styles.title}>{title}</Text>
-          <Text style={styles.timeText}>{convertTime(duration)}</Text>
-        </View>
-      </View>
+      </TouchableWithoutFeedback>
       <View style={styles.rightContainer}>
         <SimpleLineIcons
           onPress={onOptionPress}
@@ -33,7 +34,7 @@ export default function LibraryItem({title, duration, onOptionPress}) {
         />
       </View>
     </View>
-    {/* <View style={styles.separator} /> */}
+    <View style={styles.separator} />
     </>
   )
 }
@@ -44,14 +45,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: '#3B3D3F',
     alignSelf: 'center',
-    width: width - 80,
-    marginHorizontal: 19,
+    width: width - 50,
   },
   leftContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     flex: 1,
-    marginHorizontal: 10,
   },
   rightContainer: {
     flexBasis: 50,
@@ -84,12 +83,12 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#898a8b'
   },
-  // separator: {
-  //   width: width - 80,
-  //   backgroundColor: 'orange',
-  //   opacity: 0.3,
-  //   height: 0.5,
-  //   alignSelf: 'center',
-  //   marginTop: 10,
-  // },
+  separator: {
+    width: width - 50,
+    backgroundColor: 'orange',
+    opacity: 0.3,
+    height: 1.5,
+    alignSelf: 'center',
+    marginTop: 10,
+  },
 })

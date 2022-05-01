@@ -4,6 +4,7 @@ import { AudioContext } from '../contextAPI/AudioProvider'
 import { RecyclerListView, LayoutProvider } from 'recyclerlistview';
 import LibraryItem from '../components/LibraryItem';
 import OptionModal from '../components/OptionModal';
+import { Audio } from 'expo-av';
 
 export default class AudioList extends Component {
   static contextType = AudioContext;
@@ -12,6 +13,9 @@ export default class AudioList extends Component {
     super(props);
     this.state = {
       optionModalVisible: false,
+      playbackObj: null,
+      soundsObj: null,
+      currentAudio: {},
     }
 
     this.currentItem = {}
@@ -22,11 +26,49 @@ export default class AudioList extends Component {
     dim.height = 70;
   });
 
+  handleAudioPress = async (audioItem) => {
+    try {
+      // playing audio for the first time
+      if (this.state.soundsObj === null) {
+        const playbackObj = new Audio.Sound();
+        const status = await playbackObj.loadAsync(
+          {uri: audioItem.uri},
+          {shouldPlay: true}
+        );
+        return this.setState({
+          ...this.state,
+          currentAudio: audioItem,
+          playbackObj: playbackObj,
+          soundsObj: status}
+        );
+      }
+      // pause audio
+      if (this.state.soundsObj.isLoaded && this.state.soundsObj.isPlaying) {
+        const status = await this.state.playbackObj.setStatusAsync({shouldPlay: false});
+        return this.setState({...this.state, soundsObj: status})
+      }
+      // resume audio
+      if (this.state.soundsObj.isLoaded && !this.state.soundsObj.isPlaying && this.state.currentAudio.id === audioItem.id) {
+        const status = await this.state.playbackObj.playAsync();
+        return this.setState({...this.state, soundsObj: status})
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   rowRenderer = (type, item) => {
-    return <View style={styles.container}><LibraryItem title={item.filename} duration={item.duration} onOptionPress={() => {
-      this.currentItem = item;
-      this.setState({...this.state, optionModalVisible: true})
-    }}/></View>
+    return <View style={styles.container}>
+      <LibraryItem
+        title={item.filename}
+        duration={item.duration}
+        onAudioPress={() => this.handleAudioPress(item)}
+        onOptionPress={() => {
+          this.currentItem = item;
+          this.setState({...this.state, optionModalVisible: true})
+        }}
+      />
+    </View>
   }
 
   render() {
