@@ -90,19 +90,6 @@ export default class AudioList extends Component {
 
   render() {
     return (
-      // Prone to errors if over 100 items are loading
-      // <ScrollView>
-      //   <View style={styles.container}>
-      //   {this.context.audioFiles.map(item => (
-      //     <Text
-      //       style={styles.item}
-      //       key={item.id}
-      //     >
-      //       {item.filename}
-      //     </Text>
-      //   ))}
-      //   </View>
-      // </ScrollView>
       <AudioContext.Consumer>
         {({ dataProvider, isPlaying }) => {
           return (
