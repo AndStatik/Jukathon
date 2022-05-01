@@ -16,6 +16,8 @@ export default class AudioProvider extends Component {
       playbackObj: null,
       soundsObj: null,
       currentAudio: {},
+      isPlaying: false,
+      currentAudioIndex: null
     }
   }
 
@@ -83,11 +85,22 @@ export default class AudioProvider extends Component {
   }
 
   render() {
-    const { permissionError, audioFiles, dataProvider, playbackObj, soundsObj, currentAudio } = this.state;
+    const { permissionError, audioFiles, dataProvider, playbackObj, soundsObj, currentAudio, isPlaying, currentAudioIndex } = this.state;
     if (permissionError) return <View style={styles.container}>
       <Text>Please grant access to file system in order to use the app!</Text>
     </View>
-    return <AudioContext.Provider value={{ audioFiles, dataProvider, playbackObj, soundsObj, currentAudio, updateState: this.updateState }}>
+    return <AudioContext.Provider
+      value={{
+        audioFiles,
+        dataProvider,
+        playbackObj,
+        soundsObj,
+        currentAudio,
+        isPlaying,
+        currentAudioIndex,
+        updateState: this.updateState
+      }}
+      >
       {this.props.children}
     </AudioContext.Provider>
   }

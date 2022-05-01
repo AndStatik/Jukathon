@@ -1,6 +1,7 @@
 import { View, StyleSheet, Text, TouchableWithoutFeedback, Dimensions } from 'react-native'
 import React from 'react'
 import { SimpleLineIcons } from '@expo/vector-icons';
+import { Entypo } from '@expo/vector-icons';
 
 const convertTime = (duration) => {
   let ms = duration * 1000; // specific to my case
@@ -9,14 +10,28 @@ const convertTime = (duration) => {
   return min + ':' + (sec < 10 ? '0' : '') + sec;
 }
 
-export default function LibraryItem({title, duration, onOptionPress, onAudioPress}) {
+const renderPlayPauseIcon = isPlaying => {
+  if (isPlaying) return <Entypo name="controller-paus" size={24} color="orange" />
+  return <Entypo name="controller-play" size={24} color="orange" />
+}
+
+export default function LibraryItem({
+  title,
+  duration,
+  onOptionPress,
+  onAudioPress,
+  isPlaying,
+  activeItem
+}) {
   return (
     <>
     <View style={styles.container}>
       <TouchableWithoutFeedback onPress={onAudioPress}>
         <View style={styles.leftContainer}>
-          <View style={styles.thumbnail}>
-            <Text style={styles.thumbnailText}>{title[0]}</Text>
+          <View style={[styles.thumbnail, {backgroundColor: activeItem ? "black" : "orange"}]}>
+            <Text style={styles.thumbnailText}>
+              {activeItem ? renderPlayPauseIcon(isPlaying) : title[0]}
+            </Text>
           </View>
           <View style={styles.titleContainer}>
             <Text numberOfLines={1} style={styles.title}>{title}</Text>
@@ -61,7 +76,6 @@ const styles = StyleSheet.create({
   thumbnail: {
     height: 50,
     flexBasis: 50,
-    backgroundColor: 'orange',
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 25,
